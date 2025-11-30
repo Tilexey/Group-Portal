@@ -1,16 +1,16 @@
+
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>{{ category.name }}</title>
 </head>
 <body>
-    <h1>
-        category
-    </h1>
-    {% for category in categoryes %}
-    {{ category.name }}
-    {% endfor %}
+    <h1>{{ category.name }}</h1>
+    <p>{{ category.description }}</p>
+    <p>Created: {{ category.created_at }}</p>
+
+    <a href="{% url 'category_edit' category.pk %}">Edit</a> |
+    <a href="{% url 'category_delete' category.pk %}">Delete</a> |
+    <a href="{% url 'topic_list' category.pk %}">View Topics</a>
 </body>
 </html>

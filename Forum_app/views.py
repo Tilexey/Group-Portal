@@ -1,8 +1,15 @@
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
+from django.views.generic import CreateView, UpdateView, DeleteView, DetailView, ListView
 from django.shortcuts import get_object_or_404
 from .models import *
 from .forms import *
+
+
+
+class CategoryListView(ListView):
+    model = Category
+    template_name = 'Forum_app/category_list.html'
+    context_object_name = 'categories'
 
 
 class CategoryCreateView(CreateView):
@@ -30,6 +37,21 @@ class CategoryDetailView(DetailView):
     template_name = 'Forum_app/category_detail.html'
     context_object_name = 'category'
 
+
+
+class TopicListView(ListView):
+    model = Topic
+    template_name = 'Forum_app/topic_list.html'
+    context_object_name = 'topics'
+
+    def get_queryset(self):
+        category = get_object_or_404(Category, pk=self.kwargs['pk'])
+        return Topic.objects.filter(category=category)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['category'] = get_object_or_404(Category, pk=self.kwargs['pk'])
+        return context
 
 
 class TopicCreateView(CreateView):
@@ -67,6 +89,21 @@ class TopicDetailView(DetailView):
     template_name = 'Forum_app/topic_detail.html'
     context_object_name = 'topic'
 
+
+
+class MessageListView(ListView):
+    model = Message
+    template_name = 'Forum_app/message_list.html'
+    context_object_name = 'messages'
+
+    def get_queryset(self):
+        topic = get_object_or_404(Topic, pk=self.kwargs['pk'])
+        return Message.objects.filter(topic=topic)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['topic'] = get_object_or_404(Topic, pk=self.kwargs['pk'])
+        return context
 
 
 class MessageCreateView(CreateView):
